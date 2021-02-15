@@ -15,7 +15,7 @@ app.secret_key = os.getenv('SESSION_KEY').encode('utf8')
 
 # Create SQLite database
 # app.config.from_object(os.environ['APP_SETTINGS'])
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ('DATABASE_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 #conn = psycopg2.connect(DATABASE_URL, sslmode='require')
