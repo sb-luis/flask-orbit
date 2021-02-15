@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<!-- NAV-BAR -->
+<div class="nav-bar">
+  <button id="user-profile"><i class="fas fa-user-astronaut"></i></button>
+  <button id="create-card-icon"><i class="fas fa-rocket"></i></button>
+
+  <div class="theme-selector">
+    <button class="hidden" id="switch-light">
+      <i class="fas fa-moon"></i>
+    </button>
+    <button id="switch-dark"><i class="fas fa-star"></i></button>
+  </div>
+
+  <i class="fas fa-meteor hidden" id="delete-card-icon"></i>
+</div>
+
+<!-- BOARDS -->
+<div class="slider">
+  <div class="separator"></div>
+
+  <section>
+    <h1 class="board-title">TO DO</h1>
+    <div class="board" id="todo-board">
+
+      {% for card in todo %}
+      <div class="board-item" draggable="true" id="{{ card.id }}" data-position="{{ card.position }}">{{ card.name }}</div>      
+      {% endfor %}
+
+    </div>
+    <button class="board-footer">-</button>
+  </section>
+
+  <div class="separator"></div>
+
+  <section>
+    <h1 class="board-title">IN PROGRESS</h1>
+    <div class="board" id="progress-board">
+
+      {% for card in progress %}
+      <div class="board-item" draggable="true" id="{{ card.id }}" data-position="{{ card.position }}">{{ card.name }}</div>      
+      {% endfor %}
+
+    </div>
+    <button class="board-footer">-</button>
+  </section>
+
+  <div class="separator"></div>
+
+  <section>
+    <h1 class="board-title">DONE</h1>
+    <div class="board" id="done-board">
+
+      {% for card in done %}
+      <div class="board-item" draggable="true" id="{{ card.id }}" data-position="{{ card.position }}">{{ card.name }}</div>      
+      {% endfor %}
+
+    </div>
+    <button class="board-footer">-</button>
+  </section>
+
+  <div class="separator"></div>
+</div>
+
+<!-- POP-UPS -->
+<div class="lock-background hidden"></div>
+
+<form class="pop-up-menu hidden">
+    <p><i class="fas fa-satellite-dish"></i></p>
+    <p id="error-message" class="warning-color"></p>
+    <div class="content"></div>
+    <div class="menu-options">
+        <div>
+          <button type="button" class="no">No!</button>
+          <button type="submit" class="yes">Yes!</button>
+        </div>
+        <button type="button" class="other hidden">Maybe!</button>
+      </div>
+</form>
+
+<!-- SCRIPTS -->
+<script src="{{ url_for('static', filename='DragDropTouch.js') }}"></script>
+<script src="{{ url_for('static', filename='kanban.js') }}"></script>
+
+{% endblock %}
