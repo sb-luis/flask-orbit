@@ -358,7 +358,7 @@ def login(name, password):
 
     if user != None:
         # Compare hashes to make sure password is correct
-        hash = bcrypt.hashpw(password.encode('UTF8'), bcrypt.gensalt(rounds=13))
+        hash = bcrypt.hashpw(password.encode('UTF8'), user.password)
         if user.password == hash:
             session['id'] = user.id
             return redirect('/kanban')
