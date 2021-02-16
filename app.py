@@ -310,10 +310,10 @@ def register(name, password):
         return render_template('auth.html', route='register', error=error), 400
 
     # Hash password
-    hash = bcrypt.hashpw(password.encode('UTF8'), bcrypt.gensalt(rounds=13))
+    my_hash = bcrypt.hashpw(password.encode('UTF8'), bcrypt.gensalt(rounds=13))
 
     # Create user
-    user = User(name=name, password=hash)
+    user = User(name=name, password=my_hash)
     try:
         # Add it to database
         db.session.add(user)
@@ -358,8 +358,8 @@ def login(name, password):
 
     if user != None:
         # Compare hashes to make sure password is correct
-        hash = bcrypt.hashpw(password.encode('UTF8'), user.password.encode('UTF8').decode())
-        if user.password == hash:
+        my_hash = bcrypt.hashpw(password.encode('UTF8'), user.password.encode('UTF8'))
+        if user.password == my_hash:
             session['id'] = user.id
             return redirect('/kanban')
 
