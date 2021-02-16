@@ -3,7 +3,7 @@ load_dotenv()
 
 from flask import Flask, jsonify, redirect, render_template, request, session, url_for
 from flask_sqlalchemy import SQLAlchemy
-import bcrypt
+from passlib.hash import pbkdf2_sha256
 import psycopg2
 import os
 
@@ -310,7 +310,10 @@ def register(name, password):
         return render_template('auth.html', route='register', error=error), 400
 
     # Hash password
-    my_hash = bcrypt.hashpw(password.encode('UTF8'), bcrypt.gensalt(rounds=13))
+    my_hash = pbkdf2_sha256.hash(password)
+    print('registering user...')
+    print('user hash type:')
+    print(type(my_hash))
 
     # Create user
     user = User(name=name, password=my_hash)
@@ -357,9 +360,10 @@ def login(name, password):
     user = User.query.filter_by(name=name).first()
 
     if user != None:
+        pw = password
+        my_hash = user.password
         # Compare hashes to make sure password is correct
-        my_hash = bcrypt.hashpw(password.encode('UTF8'), user.password.encode('UTF8'))
-        if user.password == my_hash:
+        if pbkdf2_sha256.verify(pw, my_hash):
             session['id'] = user.id
             return redirect('/kanban')
 
