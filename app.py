@@ -9,6 +9,8 @@ import os
 
 # Create Flask App
 app = Flask(__name__)
+# Refresh browser cache for static files each 300 seconds
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 300
 
 # Store Session key
 app.secret_key = os.getenv('SESSION_KEY').encode('utf8')
@@ -133,18 +135,6 @@ class Card(db.Model):
 ''' ROUTES '''
 
 def main():
-    @app.after_request
-    def add_header(r):
-        """
-        Add headers to both force latest IE rendering engine or Chrome Frame,
-        and also to cache the rendered page for 10 minutes.
-        """
-        r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-        r.headers["Pragma"] = "no-cache"
-        r.headers["Expires"] = "0"
-        r.headers['Cache-Control'] = 'public, max-age=0'
-        return r
-
     @app.route('/')
     def indexRoute():
         try:
