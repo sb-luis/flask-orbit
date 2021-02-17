@@ -599,8 +599,6 @@ function validateContent(card_name, card_content) {
     error = 'Name is required.';
   } else if (card_name.length > 20) {
     error = 'Name cannot exceed 20 characters.';
-  } else if (card_content == null || card_content == '') {
-    error = 'Content is required.';
   } else if (card_content.length > 250) {
     error = 'Content cannot exceed 250 characters.';
   }
