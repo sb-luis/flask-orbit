@@ -9,7 +9,7 @@ import os
 
 # Create Flask App
 app = Flask(__name__)
-# Refresh browser cache for static files each 300 seconds
+# Refresh browser cache for static files each 300 seconds (5min)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 300
 
 # Store Session key

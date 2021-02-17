@@ -7,6 +7,7 @@ const todoBoard = document.querySelector('#todo-board');
 const progressBoard = document.querySelector('#progress-board');
 const doneBoard = document.querySelector('#done-board');
 
+let dragging = false;
 let cards = [];
 let currentCard = null;
 
@@ -55,6 +56,19 @@ sections.forEach((section) => {
   //Set sections ids
   section.id = 'section-' + sectionID;
   sectionID++;
+
+  section.addEventListener('click', (e) => {
+    e.preventDefault();
+    //SNAP
+    if (!dragging && !snapLocked) {
+      //Snap to the hovered section.
+      snapLocked = true;
+      const offsetLeft = section.offsetLeft;
+      slider.scrollLeft = offsetLeft;
+      //Wait half a second before unlocking this block of code.
+      setTimeout(unlockSnapping, 500);
+    }
+  })
 
   section.addEventListener('dragover', (e) => {
     e.preventDefault();
@@ -152,12 +166,21 @@ const noOption = popUpForm.querySelector('.no');
 const otherOption = popUpForm.querySelector('.other');
 const errorMessage = document.querySelector('#error-message');
 let popUpState = '';
+let popUpInput = null;
 let popUpTextArea = null;
 let cardContentLength = null;
 let cardContentWarning = false;
 
 document.addEventListener('keyup', (e) => {
-  if (popUpTextArea != null) {
+  if (popUpTextArea != null && popUpInput != null) {
+    //Validate input
+    let error = validateContent(popUpInput.value, popUpTextArea.value);
+    if (error){ 
+      errorMessage.innerHTML = error;
+    }else {
+      errorMessage.innerHTML = '';
+    }
+
     let len = popUpTextArea.value.length;
     cardContentLength.innerHTML = `${len}/250`;
     if (len > 250) {
@@ -181,6 +204,7 @@ function hidePopUpForm() {
   //Reset PopUpForm initial state
   popUpState = '';
   popUpTextArea = null;
+  popUpInput = null;
   cardContentLength = null;
   cardContentWarning = false;
   popUpForm.querySelector('.content').innerHTML = '';
@@ -306,6 +330,9 @@ async function createCard() {
   const card = document.createElement('div');
   renderCard(card, name, card_id);
 
+  //Set view to current card
+  slider.scrollLeft = todoBoard.offsetLeft;
+
   //Initialise card:
   initialiseCard(card_id, name, content, 0, pos);
 
@@ -329,6 +356,7 @@ function initialiseCard(id, name, content, stage, position) {
 
   //Add event listeners
   card.addEventListener('dragstart', () => {
+    dragging = true;
     currentCard = id;
     toggleNavBar(0);
     card.classList.add('dragging');
@@ -336,6 +364,7 @@ function initialiseCard(id, name, content, stage, position) {
   });
 
   card.addEventListener('dragend', () => {
+    dragging = false;
     //Update Card Stage & Position
     evaluateCardPosition(card.id, card.parentElement.id);
 
@@ -599,6 +628,8 @@ function validateContent(card_name, card_content) {
     error = 'Name is required.';
   } else if (card_name.length > 20) {
     error = 'Name cannot exceed 20 characters.';
+  } else if (!card_name.match(/^[a-z0-9\s]+$/i)){
+    error = "Name's characters must be alphanumeric or spaces.";
   } else if (card_content.length > 250) {
     error = 'Content cannot exceed 250 characters.';
   }
@@ -636,7 +667,7 @@ function renderCardForm() {
   popUpForm.querySelector('.content').innerHTML = `
   <div>
     <label for="">Name</label>
-    <input type="text" autocomplete="off"/>
+    <input type="text" id="card-name" autocomplete="off"/>
   </div>
   <div>
     <label for="">Content</label>
@@ -646,6 +677,7 @@ function renderCardForm() {
   `;
 
   popUpTextArea = document.querySelector('#card-content');
+  popUpInput = document.querySelector('#card-name');
   cardContentLength = document.querySelector('#card-content-length');
 
   noOption.innerHTML = 'Cancel';

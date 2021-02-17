@@ -305,7 +305,7 @@ button {
 }
 
 ::-webkit-scrollbar {
-  height: 10px;
+  height: 20px;
   width: 10px;
 }
 
@@ -314,7 +314,7 @@ button {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: var(--text);
+  background-color: var(--bg-almost);
 }
 
 /* DESKTOP */
