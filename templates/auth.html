@@ -5,11 +5,16 @@
   <p class="warning-color" id="error-message">{{ error }}</p>
   <div>
     <label for="name">name:</label>
-    <input type="text" name="name" id='user-name' autocomplete="off" />
+    <input type="text" name="name" id="user-name" autocomplete="off" />
   </div>
   <div>
     <label for="password">password:</label>
-    <input type="password" name="password" id='user-password' autocomplete="off" />
+    <input
+      type="password"
+      name="password"
+      id="user-password"
+      autocomplete="off"
+    />
   </div>
 
   <div class="menu-options">
@@ -23,6 +28,7 @@
   let password = document.getElementById('user-password');
   let errorMessage = document.getElementById('error-message');
   let error = false;
+  let previousError = errorMessage.innerHTML;
 
   let theme = localStorage.getItem('theme');
 
@@ -55,8 +61,8 @@
   }
 
   document.addEventListener('keyup', (e) => {
-    //Only validate input if we have any visible errors...
-    if(error) error = validateUser(name.value, password.value);
+    //Only validate input every keystroke if we have already any previous errors...
+    if (previousError) error = validateUser(name.value, password.value);
     errorMessage.innerHTML = error ? error : '';
   });
 </script>
