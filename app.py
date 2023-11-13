@@ -144,6 +144,10 @@ def main():
         except Exception as e:
             return redirect('https://lsb.name')
 
+    @app.route('/healthcheck')
+    def healthRoute():
+        return 'SUCCESS'
+
     @app.route('/kanban')
     def kanbanRoute():
         try:
