@@ -135,6 +135,8 @@ class Card(db.Model):
 ''' ROUTES '''
 
 def main():
+    db.create_all()
+
     @app.route('/')
     def indexRoute():
         try:

@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: prod
+    environment:
+      DATABASE_URL: postgres://user:qwerty12345@db:5432/orbit
+      SESSION_KEY: qwerty12345
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./:/usr/src/app"
+    depends_on:
+      - db
+  db:
+    image: postgres:11.6-alpine
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: qwerty12345
+      POSTGRES_DB: orbit
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+    ports:
+      - "5432:5432"
+    restart: always
